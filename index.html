@@ -91,8 +91,9 @@
         </footer>
     </main>
 
-    <div id="resultModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 custom-shadow border border-slate-100 text-center transform transition-all">
+    <!-- FIXED MOBILE RESULT MODAL -->
+    <div id="resultModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 custom-shadow border border-slate-100 text-center transform transition-all my-auto max-h-[90vh] overflow-y-auto">
             <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold" id="modalIcon">🏆</div>
             <h3 class="text-2xl font-bold text-slate-900 mb-1" id="modalTitle">Kết Quả Ôn Tập</h3>
             <p class="text-xs text-slate-400 mb-4 font-semibold">Cre by KhDung</p>
@@ -480,12 +481,12 @@
                 lesson: "bai2",
                 type: "tf",
                 title: "Bài 2 - Trắc nghiệm Đúng / Sai (Câu 2)",
-                passage: "Quá trình feralit là quá trình hình thành đất chủ yếu ở nước ta, vì vậy các loại đất feralit là các loại đất đặc trưng cho vùng đồi núi. Loại đất này thường chua và có màu đỏ vàng do bị rửa trôi các chất ba-dơ dễ tan và tích tụ ô-xít sắt, ô-xít nhôm.",
+                passage: "Quá trình feralit là quá trình hình thành đất chủ yếu ở nước ta, vì vậy các loại đất feralit là các loại đất đặc trưng cho vùng đồi núi. Loại đất này thường chua và có màu đỏ vàng do bị rửa trôi các chất ba-zơ dễ tan và tích tụ ô-xít sắt, ô-xít nhôm.",
                 statements: [
                     { text: "a) Feralit là quá trình hình thành đất đặc trưng của vùng nhiệt đới ẩm gió mùa.", answer: true, exp: "Đúng." },
                     { text: "b) Đất feralit hình thành trên đá vôi phân bố chủ yếu ở các tỉnh thuộc Nam Trung Bộ và Đông Nam Bộ.", answer: false, exp: "Sai. Phân bố chủ yếu ở Tây Bắc, Đông Bắc và Bắc Trung Bộ." },
                     { text: "c) Nhóm đất feralit có diện tích lớn nhất ở nước ta, phân bố ở cả miền núi và rìa các đồng bằng.", answer: true, exp: "Đúng (~65% diện tích tự nhiên)." },
-                    { text: "d) Đất feralit có màu đỏ vàng do mưa lớn làm rửa trôi các chất ba-dơ dễ tan.", answer: true, exp: "Đúng, tích tụ oxit sắt, nhôm tạo màu đỏ vàng." }
+                    { text: "d) Đất feralit có màu đỏ vàng do mưa lớn làm rửa trôi các chất ba-zơ dễ tan.", answer: true, exp: "Đúng, tích tụ oxit sắt, nhôm tạo màu đỏ vàng." }
                 ]
             },
             {
