@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ôn Tập Giữa Kỳ 1 Địa Lí 12 - Cre by KhDung</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .custom-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 min-h-full text-slate-800 flex flex-col">
+
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-md font-bold text-xl">ĐL12</div>
+                <div>
+                    <h1 class="font-bold text-lg sm:text-xl text-slate-900 tracking-tight flex items-center gap-2">
+                        <span>Ôn Tập Giữa Kỳ 1 Địa Lí 12</span>
+                        <span class="text-xs font-semibold bg-blue-100 text-blue-700 px-2.5 py-0.5 rounded-full border border-blue-200">Cre by KhDung</span>
+                    </h1>
+                    <p class="text-xs text-slate-500 font-medium">Trắc nghiệm nhiều lựa chọn • Đúng/Sai • Trả lời ngắn (Phản hồi tức thì)</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div id="scoreBadge" class="flex items-center bg-blue-50 text-blue-700 px-4 py-2 rounded-xl border border-blue-200 font-semibold text-sm">
+                    <span>Điểm: </span><span id="headerScore" class="ml-1 text-blue-800 font-bold">0</span>/<span id="headerTotal">0</span>
+                </div>
+                <button onclick="resetQuiz()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-4 py-2 rounded-xl transition text-sm flex items-center space-x-1.5 border border-slate-300">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    <span>Làm lại</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Lesson Filter Tabs -->
+        <div class="flex flex-wrap gap-2 mb-8 justify-center">
+            <button onclick="filterLesson('all')" class="lesson-tab px-4 py-2 rounded-xl font-semibold text-sm transition bg-blue-600 text-white shadow-md" data-lesson="all">Tất cả bài</button>
+            <button onclick="filterLesson('bai1')" class="lesson-tab px-4 py-2 rounded-xl font-semibold text-sm transition bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-lesson="bai1">Bài 1: Vị trí địa lí</button>
+            <button onclick="filterLesson('bai2')" class="lesson-tab px-4 py-2 rounded-xl font-semibold text-sm transition bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-lesson="bai2">Bài 2: TN Nhiệt đới ẩm</button>
+            <button onclick="filterLesson('bai3')" class="lesson-tab px-4 py-2 rounded-xl font-semibold text-sm transition bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-lesson="bai3">Bài 3: Phân hóa đa dạng</button>
+            <button onclick="filterLesson('bai5')" class="lesson-tab px-4 py-2 rounded-xl font-semibold text-sm transition bg-white text-slate-600 hover:bg-slate-100 border border-slate-200" data-lesson="bai5">Bài 5: Tài nguyên & Môi trường</button>
+        </div>
+
+        <!-- Progress Overview Bar -->
+        <div class="bg-white p-4 sm:p-6 rounded-2xl custom-shadow border border-slate-100 mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="w-full sm:w-auto flex-1">
+                <div class="flex justify-between items-center mb-1.5">
+                    <span class="text-sm font-bold text-slate-700">Tiến độ hoàn thành</span>
+                    <span id="progressText" class="text-xs font-semibold text-blue-600">0 / 0 câu (0%)</span>
+                </div>
+                <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                    <div id="progressBar" class="bg-blue-600 h-full w-0 transition-all duration-300 rounded-full"></div>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3 w-full sm:w-auto justify-end">
+                <div class="text-right mr-2">
+                    <div class="text-xs text-slate-500 font-medium">Số ý đúng</div>
+                    <div id="correctCount" class="text-lg font-bold text-emerald-600">0</div>
+                </div>
+                <button onclick="submitAll()" class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition transform active:scale-95">
+                    Tổng kết kết quả
+                </button>
+            </div>
+        </div>
+
+        <!-- Questions Container -->
+        <div id="questionsContainer" class="space-y-8">
+            <!-- Dynamically populated via JS -->
+        </div>
+
+        <!-- Bottom Submit / Result Section -->
+        <div class="mt-12 text-center pb-8">
+            <button onclick="submitAll()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-8 py-4 rounded-2xl shadow-lg transition transform active:scale-95 text-lg">
+                Nộp Bài & Xem Tổng Kết
+            </button>
+        </div>
+
+        <!-- Footer Copyright -->
+        <footer class="text-center py-6 border-t border-slate-200 text-xs font-semibold text-slate-500">
+            Ứng dụng ôn tập Địa lí 12 • <span class="text-blue-600 font-bold">Cre by KhDung</span>
+        </footer>
+    </main>
+
+    <div id="resultModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 custom-shadow border border-slate-100 text-center transform transition-all">
+            <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold" id="modalIcon">🏆</div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-1" id="modalTitle">Kết Quả Ôn Tập</h3>
+            <p class="text-xs text-slate-400 mb-4 font-semibold">Cre by KhDung</p>
+            
+            <div class="bg-slate-50 rounded-2xl p-6 mb-6 border border-slate-200">
+                <div class="text-4xl font-extrabold text-blue-600 mb-1" id="modalScoreDisplay">0 / 0</div>
+                <div class="text-base font-bold text-slate-700" id="modalPercentage">Đạt 0%</div>
+                <div class="text-xl font-extrabold text-indigo-600 mt-3 pt-3 border-t border-slate-200" id="modalSubtext">Gà vãi =))</div>
+            </div>
+
+            <div class="flex space-x-3">
+                <button onclick="closeModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-3 rounded-xl transition">Xem lại bài</button>
+                <button onclick="resetQuiz(); closeModal();" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition shadow-md">Làm lại từ đầu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // FULL QUESTION DATA FROM PDF
+        const quizData = [
+            // --- BÀI 1 ---
+            {
+                id: "b1_mc_1",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 1: Theo quy định hiện hành, quần đảo Trường Sa thuộc quyền quản lí hành chính của tỉnh nào sau đây?",
+                options: ["Quảng Ngãi.", "Lâm Đồng.", "Khánh Hòa.", "Nghệ An."],
+                correct: 2,
+                explanation: "Quần đảo Trường Sa thuộc huyện đảo Trường Sa, tỉnh Khánh Hòa."
+            },
+            {
+                id: "b1_mc_2",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 2: Vùng thềm lục địa của nước ta bao gồm phần đáy biển và bộ phận nào sau đây?",
+                options: ["Lòng đất dưới đáy biển.", "Các đảo ven bờ biển.", "Toàn bộ vùng lãnh hải.", "Vùng tiếp giáp lãnh hải."],
+                correct: 0,
+                explanation: "Thềm lục địa bao gồm đáy biển và lòng đất dưới đáy biển thuộc phần kéo dài tự nhiên của lục địa."
+            },
+            {
+                id: "b1_mc_3",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 3: Trên đất liền, vùng trời của nước ta được xác định bởi ranh giới nào sau đây?",
+                options: ["Đường bờ biển nước ta.", "Đường biên giới quốc gia.", "Đường cơ sở trên biển.", "Đường vĩ tuyến biên giới."],
+                correct: 1,
+                explanation: "Vùng trời trên đất liền được xác định bởi đường biên giới quốc gia."
+            },
+            {
+                id: "b1_mc_4",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 4: Vị trí nằm trên ngã tư đường hàng hải và hàng không quốc tế giúp nước ta thuận lợi để",
+                options: ["giao lưu với các nước.", "phát triển nghề làm muối.", "trồng cây công nghiệp.", "bảo vệ rừng ngập mặn."],
+                correct: 0,
+                explanation: "Vị trí ngã tư hàng hải và hàng không quốc tế tạo điều kiện thuận lợi cho việc giao lưu, hợp tác với các nước."
+            },
+            {
+                id: "b1_mc_5",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 5: Việt Nam gắn liền với lục địa và đại dương nào sau đây?",
+                options: ["Á - Âu và Bắc Băng Dương.", "Á - Âu và Đại Tây Dương.", "Á - Âu và Ấn Độ Dương.", "Á - Âu và Thái Bình Dương."],
+                correct: 3,
+                explanation: "Việt Nam nằm ở rìa phía đông của lục địa Á - Âu và tiếp giáp Thái Bình Dương."
+            },
+            {
+                id: "b1_mc_6",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 1: Đường biên giới trên biển và trên đất liền của nước ta dài gặp khó khăn lớn nhất về",
+                options: ["thu hút đầu tư nước ngoài.", "bảo vệ chủ quyền lãnh thổ.", "thiếu nguồn lao động.", "phát triển nền văn hóa."],
+                correct: 1,
+                explanation: "Đường biên giới dài cả trên đất liền và biển gây nhiều khó khăn cho việc quản lý và bảo vệ chủ quyền lãnh thổ."
+            },
+            {
+                id: "b1_mc_7",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 2: Sự đa dạng về bản sắc dân tộc của nước ta là do vị trí",
+                options: ["diễn ra những hoạt động kinh tế sôi động.", "liền kề của hai vành đai sinh khoáng lớn.", "nằm trên ngã tư đường hàng hải và hàng không quốc tế lớn.", "có sự gặp gỡ nhiều nền văn minh lớn với văn minh bản địa."],
+                correct: 3,
+                explanation: "Sự giao thoa giữa các nền văn minh lớn trong khu vực và thế giới với văn minh bản địa tạo nên bản sắc văn hóa đa dạng."
+            },
+            {
+                id: "b1_mc_8",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 3: Nước ta thuận lợi giao lưu với các nước trên thế giới là do nguyên nhân chủ yếu nào sau đây?",
+                options: ["Có nhiều nét tương đồng về lịch sử và văn hóa.", "Ở khu vực giao thoa giữa các nền văn minh lớn.", "Ở Ngã tư đường hàng hải và hàng không quốc tế.", "Nằm hoàn toàn ở bán cầu Bắc và bán cầu Đông."],
+                correct: 2,
+                explanation: "Nằm ở ngã tư giao thông hàng hải và hàng không quốc tế giúp Việt Nam thuận lợi kết nối giao thương."
+            },
+            {
+                id: "b1_mc_9",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 4: Ý nghĩa kinh tế của vị trí địa lí nước ta là",
+                options: ["tự nhiên phân hóa đa dạng giữa bắc - nam và đông - tây.", "nguồn tài nguyên sinh vật và khoáng sản vô cùng giàu có.", "thuận lợi giao lưu với các nước trong khu vực và thế giới.", "thuận lợi để xây dựng nền văn hóa tương đồng với khu vực."],
+                correct: 2,
+                explanation: "Ý nghĩa kinh tế nổi bật là tạo thuận lợi mở rộng giao lưu, phát triển kinh tế với các nước."
+            },
+            {
+                id: "b1_mc_10",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 5: Do tiếp giáp Biển Đông nên nước ta có",
+                options: ["hai lần Mặt Trời lên thiên đỉnh trong năm.", "gió mùa Đông Bắc hoạt động ở mùa đông.", "tổng lượng mưa lớn, độ ẩm không khí cao.", "một mùa có mưa nhiều, một mùa mưa ít."],
+                correct: 2,
+                explanation: "Biển Đông mang lại lượng hơi ẩm dồi dào, giúp nước ta có lượng mưa lớn và độ ẩm cao."
+            },
+            {
+                id: "b1_mc_11",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 1: Việt Nam không có khí hậu nhiệt đới khô như một số nước cùng vĩ độ là do",
+                options: ["nằm trên vành đai sinh khoáng Địa Trung Hải.", "nằm hoàn toàn trong vùng nội chí tuyến.", "tiếp giáp với Biển Đông và ảnh hưởng gió mùa.", "nằm ở trung tâm của vùng Đông Nam Á."],
+                correct: 2,
+                explanation: "Nhờ Biển Đông kết hợp tác động của gió mùa nên khí hậu nước ta không bị khô hạn như các nước cùng vĩ độ ở Tây Á/Bắc Phi."
+            },
+            {
+                id: "b1_mc_12",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 2: Đặc điểm nào sau đây không đúng với thiên nhiên vùng biển và thềm lục địa nước ta?",
+                options: ["Vùng biển có diện tích lớn gấp khoảng ba lần vùng đất liền.", "Thềm lục địa nông, được mở rộng ở phía Bắc và phía Nam.", "Độ nông - sâu của thềm lục địa đồng nhất từ Bắc vào Nam.", "Thềm lục địa miền Trung hẹp, tiếp giáp với vùng biển sâu."],
+                correct: 2,
+                explanation: "Thềm lục địa nước ta không đồng nhất: mở rộng ở Bắc/Nam và thu hẹp, sâu ở miền Trung."
+            },
+            {
+                id: "b1_mc_13",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 3: Đường cơ sở của nước ta được xác định là đường",
+                options: ["được xem là ranh giới trên biển của nước ta.", "khoảng cách 12 hải lí tính từ vùng lãnh hải.", "tính từ mức nước thủy triều lúc lên cao nhất.", "nối các mũi đất xa nhất với các đảo ven bờ."],
+                correct: 3,
+                explanation: "Đường cơ sở nước ta là đường gãy khúc nối liền các điểm tiêu chí được lựa chọn tại đường bờ biển và các đảo ven bờ."
+            },
+            {
+                id: "b1_mc_14",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 4: Ảnh hưởng của vị trí địa lí và hình dáng lãnh thổ đến sông ngòi nước ta là",
+                options: ["mạng lưới sông ngòi dày đặc, có độ dốc lớn.", "phần lớn là sông nhỏ, chế độ nước theo mùa.", "có rất nhiều chi lưu và tổng lượng nước lớn.", "hàm lượng phù sa lớn và chảy ra biển Đông."],
+                correct: 1,
+                explanation: "Hình dáng lãnh thổ hẹp ngang, dốc làm cho sông ngòi phần lớn ngắn, nhỏ, mạng lưới dày và nước theo mùa."
+            },
+            {
+                id: "b1_mc_15",
+                lesson: "bai1",
+                type: "mc",
+                title: "Bài 1 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 5: Sự hình thành các miền tự nhiên khác nhau ở nước ta chủ yếu do",
+                options: ["khí hậu và sông ngòi.", "vị trí địa lí và hình thể.", "khoáng sản và biển.", "gió mùa và dòng biển."],
+                correct: 1,
+                explanation: "Vị trí địa lí kết hợp với hình thể kéo dài, phân hóa tạo nên sự đa dạng của các miền tự nhiên."
+            },
+            {
+                id: "b1_tf_1",
+                lesson: "bai1",
+                type: "tf",
+                title: "Bài 1 - Trắc nghiệm Đúng / Sai (Câu 1)",
+                passage: "Việt Nam nằm trên bán đảo Đông Dương, gần trung tâm khu vực Đông Nam Á. Trên đất liền, nước ta tiếp giáp với các nước láng giềng Trung Quốc, Lào, Cam-pu-chia và nằm ven Biển Đông, giáp với vùng biển của nhiều quốc gia. Lãnh thổ Việt Nam là một khối thống nhất và toàn vẹn, bao gồm vùng đất, vùng biển và vùng trời.",
+                statements: [
+                    { text: "a) Việt Nam nằm ở vị trí trung tâm của bán đảo Đông Dương.", answer: false, exp: "Sai. Việt Nam nằm ở phía đông của bán đảo Đông Dương (chỉ gần trung tâm khu vực Đông Nam Á)." },
+                    { text: "b) Trên đất liền, nước ta có đường biên giới giáp với 3 quốc gia.", answer: true, exp: "Đúng (Trung Quốc, Lào, Cam-pu-chia)." },
+                    { text: "c) Vị trí ven biển giúp nước ta có điều kiện giao lưu thuận lợi với các nước trong khu vực và trên thế giới.", answer: true, exp: "Đúng, tiếp giáp Biển Đông giúp mở rộng giao thương hàng hải." },
+                    { text: "d) Do nằm hoàn toàn trong vùng nội chí tuyến nên nước ta có mùa đông lạnh, ít mưa.", answer: false, exp: "Sai. Mùa đông lạnh ở miền Bắc là do ảnh hưởng của gió mùa Đông Bắc chứ không phải do vị trí nội chí tuyến." }
+                ]
+            },
+            {
+                id: "b1_tf_2",
+                lesson: "bai1",
+                type: "tf",
+                title: "Bài 1 - Trắc nghiệm Đúng / Sai (Câu 2)",
+                passage: "Vùng biển Việt Nam thuộc Biển Đông có diện tích khoảng 1 triệu km², tiếp giáp với vùng biển của các quốc gia: Trung Quốc, Phi-líp-pin, Ma-lai-xi-a, Bru-nây, In-đô-nê-xi-a, Cam-pu-chia và Thái Lan. Vùng biển nước ta bao gồm: nội thuỷ, lãnh hải, vùng tiếp giáp lãnh hải, vùng đặc quyền kinh tế và thềm lục địa.",
+                statements: [
+                    { text: "a) Vùng biển của nước ta rộng gấp khoảng 3 lần diện tích phần đất liền.", answer: true, exp: "Đúng (~1 triệu km² biển so với ~331.000 km² đất liền)." },
+                    { text: "b) Lãnh hải là vùng biển thuộc chủ quyền quốc gia trên biển, có chiều rộng 12 hải lí.", answer: true, exp: "Đúng theo Công ước Luật biển 1982." },
+                    { text: "c) Đường biên giới quốc gia trên biển được xác định là ranh giới ngoài của vùng tiếp giáp lãnh hải.", answer: false, exp: "Sai. Đường biên giới quốc gia trên biển là ranh giới ngoài của LÃNH HẢI." },
+                    { text: "d) Việc xác định rõ các vùng biển giúp nước ta bảo vệ quyền và lợi ích hợp pháp trên Biển Đông.", answer: true, exp: "Đúng." }
+                ]
+            },
+            {
+                id: "b1_sa_1",
+                lesson: "bai1",
+                type: "sa",
+                title: "Bài 1 - Trả lời ngắn (Câu 1)",
+                question: "Nước ta có 21 tỉnh/thành phố giáp biển. Hãy cho biết số tỉnh/thành phố giáp biển chiếm bao nhiêu % số tỉnh/thành của nước ta? (Tính theo tổng số 34 tỉnh/thành trong hệ thống bài tập, làm tròn kết quả đến 1 chữ số thập phân).",
+                correctAnswer: "61,8",
+                unit: "%",
+                explanation: "Tính: (21 : 34) x 100 ≈ 61,8%"
+            },
+            {
+                id: "b1_sa_2",
+                lesson: "bai1",
+                type: "sa",
+                title: "Bài 1 - Trả lời ngắn (Câu 2)",
+                question: "Vùng biển đặc quyền kinh tế hợp với vùng lãnh hải của nước ta rộng 200 hải lí tính từ đường cơ sở (1 hải lí = 1852 m). Hãy cho biết vùng biển này rộng bao nhiêu km? (làm tròn kết quả đến hàng đơn vị).",
+                correctAnswer: "370",
+                unit: "km",
+                explanation: "1 hải lí = 1,852 km. Tính: 200 x 1,852 = 370,4 km ≈ 370 km."
+            },
+
+            // --- BÀI 2 ---
+            {
+                id: "b2_mc_1",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 1: Ở một số vùng núi đá vôi nước ta, quá trình hòa tan đã tạo nên dạng địa hình đặc biệt nào sau đây?",
+                options: ["Địa hình bán bình nguyên.", "Địa hình mài mòn biển.", "Địa hình núi cao dốc.", "Địa hình các-xtơ."],
+                correct: 3,
+                explanation: "Địa hình các-xtơ được hình thành do hiện tượng hòa tan đá vôi."
+            },
+            {
+                id: "b2_mc_2",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 2: Tổng lượng phù sa hằng năm của các hệ thống sông ngòi trên lãnh thổ nước ta là khoảng",
+                options: ["100 triệu tấn/năm.", "200 triệu tấn/năm.", "300 triệu tấn/năm.", "400 triệu tấn/năm."],
+                correct: 1,
+                explanation: "Tổng lượng phù sa sông ngòi nước ta khoảng 200 triệu tấn/năm."
+            },
+            {
+                id: "b2_mc_3",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 3: Đất feralit ở nước ta thường có tính chất chua và có màu đỏ vàng chủ yếu do sự tích tụ của",
+                options: ["các chất ba-zơ dễ tan.", "ô-xít sắt và ô-xít nhôm.", "các hợp chất hữu cơ mùn.", "các hợp chất muối mặn."],
+                correct: 1,
+                explanation: "Tính chất chua do rửa trôi ba-zơ và màu đỏ vàng do sự tích tụ oxit sắt (Fe2O3) và oxit nhôm (Al2O3)."
+            },
+            {
+                id: "b2_mc_4",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 4: Gió mùa đông bắc tạo nên một mùa đông lạnh từ",
+                options: ["Từ dãy Bạch Mã vào miền Nam.", "Từ dãy Bạch Mã ra miền Bắc.", "Từ dãy Hoành Sơn ra miền Bắc.", "Từ dãy Hoành Sơn vào miền Nam."],
+                correct: 1,
+                explanation: "Gió mùa Đông Bắc bị dãy Bạch Mã chặn lại nên tạo ra mùa đông lạnh từ Bạch Mã trở ra Bắc."
+            },
+            {
+                id: "b2_mc_5",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 5: Gió mùa đông bắc gần như bị chặn lại ở dãy núi nào sau đây?",
+                options: ["Tam Điệp.", "Hoành Sơn.", "Bạch Mã.", "Hoàng Liên Sơn."],
+                correct: 2,
+                explanation: "Dãy Bạch Mã đóng vai trò bức chắn địa hình làm suy giảm và chặn bớt ảnh hưởng gió mùa Đông Bắc."
+            },
+            {
+                id: "b2_mc_6",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 1: Khối khí nhiệt đới ẩm từ Bắc Ấn Độ Dương gây mưa lớn cho Nam Bộ nhưng lại gây khô nóng cho ven biển Trung Bộ chủ yếu do",
+                options: ["tác động của dải hội tụ nhiệt đới trên biển.", "ảnh hưởng chắn gió của dãy núi Trường Sơn.", "sự lấn lướt của khối khí từ áp cao Xi-bia.", "địa hình miền Trung hẹp ngang và giáp biển."],
+                correct: 1,
+                explanation: "Hiện tượng phơn khô nóng xảy ra khi khối khí này vượt qua dãy Trường Sơn chắn gió."
+            },
+            {
+                id: "b2_mc_7",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 2: Trong sản xuất nông nghiệp, tính chất thất thường của thiên nhiên nhiệt đới ẩm gió mùa nước ta gây khó khăn lớn nhất trong việc",
+                options: ["khai thác và chế biến các loại nông sản.", "xây dựng hệ thống kênh mương thủy lợi.", "bố trí lịch thời vụ và quy hoạch cây trồng.", "bảo dưỡng máy móc và thiết bị công nghệ."],
+                correct: 2,
+                explanation: "Thiên nhiên thất thường (sương muối, hạn hán, bão) ảnh hưởng lớn nhất tới việc chọn cây trồng và lịch thời vụ."
+            },
+            {
+                id: "b2_mc_8",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 3: Sự chiếm ưu thế của các loài thực vật nhiệt đới như họ Đậu, Vang, Dâu tằm trong các hệ sinh thái rừng nước ta là minh chứng cho",
+                options: ["tính chất nhiệt đới ẩm của thiên nhiên.", "sự phân hóa đa dạng theo độ cao địa hình.", "tác động của các luồng gió mùa mùa hạ.", "sự phong phú của các loại đất trong rừng."],
+                correct: 0,
+                explanation: "Các dòng họ thực vật nhiệt đới phát triển ưu thế minh chứng cho tính chất nhiệt đới ẩm chủ đạo."
+            },
+            {
+                id: "b2_mc_9",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 4: Càng vào phía Nam gió mùa Đông Bắc càng",
+                options: ["suy yếu.", "mạnh.", "khô nóng.", "mưa nhiều."],
+                correct: 0,
+                explanation: "Khi di chuyển xuống phía Nam, gió mùa Đông Bắc bị suy yếu do biến tính và sự cản trở của địa hình."
+            },
+            {
+                id: "b2_mc_10",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 5: Mưa phùn vùng ven biển và các đồng bằng Bắc Bộ, Bắc Trung Bộ thường diễn ra vào",
+                options: ["nửa đầu mùa đông.", "nửa sau mùa đông.", "nửa sau mùa xuân.", "nửa đầu mùa hạ."],
+                correct: 1,
+                explanation: "Nửa sau mùa đông (tháng 2-4), khối khí biến tính lệch qua biển đem lại mưa phùn."
+            },
+            {
+                id: "b2_mc_11",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 1: Sự phân hóa khí hậu giữa hai sườn Đông và Tây của dãy Trường Sơn chủ yếu là kết quả của",
+                options: ["các khối khí qua biển kết hợp với hướng của các dãy núi.", "các đợt gió mùa mùa đông và địa hình núi cao chiếm ưu thế.", "Tín phong bán cầu Bắc kết hợp với các dãy núi hướng vòng cung.", "gió mùa mùa hạ cùng với sự hoạt động của các dải hội tụ nhiệt đới."],
+                correct: 0,
+                explanation: "Sự kết hợp giữa các luồng khí qua biển và hướng địa hình núi vuông góc/chếch hướng gió gây phân hóa hai sườn."
+            },
+            {
+                id: "b2_mc_12",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 2: Quá trình feralit diễn ra mạnh mẽ ở vùng đồi núi thấp nước ta đã tạo ra thuận lợi chủ yếu để",
+                options: ["hình thành các vùng chuyên canh cây công nghiệp có quy mô lớn.", "thâm canh các loại cây lương thực và thực phẩm có năng suất cao.", "đẩy mạnh việc khai thác lâm sản và phát triển các loài cây dược liệu.", "quy hoạch các khu công nghiệp chế biến sâu tại những vùng miền núi."],
+                correct: 0,
+                explanation: "Đất feralit vùng đồi núi thấp rất thích hợp phát triển cây công nghiệp lâu năm quy mô lớn."
+            },
+            {
+                id: "b2_mc_13",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 3: Quá trình phong hóa hóa học tham gia vào việc làm biến đổi bề mặt địa hình hiện tại của nước ta được biểu hiện ở",
+                options: ["hiện tượng bào mòn, rửa trôi.", "thành tạo địa hình cac-xtơ.", "đất trượt, đá lở ở sườn dốc.", "hiện tượng xâm thực mạnh."],
+                correct: 1,
+                explanation: "Địa hình cac-xtơ chính là sản phẩm điển hình của phong hóa hóa học hòa tan đá vôi."
+            },
+            {
+                id: "b2_mc_14",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 4: Nguyên nhân chủ yếu nào sau đây làm cho sông ngòi nước ta có hàm lượng phù sa lớn?",
+                options: ["Mạng lưới sông ngòi dày đặc.", "Chế độ nước thay đổi theo mùa.", "Tổng lượng dòng chảy lớn.", "Xâm thực mạnh ở miền núi."],
+                correct: 3,
+                explanation: "Địa hình dốc, mưa lớn tập trung làm cho quá trình xâm thực rửa trôi ở miền núi diễn ra mạnh, mang lại hàm lượng phù sa lớn."
+            },
+            {
+                id: "b2_mc_15",
+                lesson: "bai2",
+                type: "mc",
+                title: "Bài 2 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 5: Loại gió nào sau đây vừa gây mưa cho vùng ven biển Trung bộ, vừa là nguyên nhân chính tạo nên mùa khô ở Nam Bộ và vùng cao nguyên phía tây Nam Trung Bộ?",
+                options: ["Gió mùa Đông Bắc.", "Tín phong bán cầu Nam.", "Gió mùa Tây Nam.", "Tín phong bán cầu Bắc."],
+                correct: 3,
+                explanation: "Tín phong bán cầu Bắc thổi hướng Đông Bắc mang mưa cho Trung Bộ nhưng khô nóng ở Tây Nguyên & Nam Bộ."
+            },
+            {
+                id: "b2_tf_1",
+                lesson: "bai2",
+                type: "tf",
+                title: "Bài 2 - Trắc nghiệm Đúng / Sai (Câu 1)",
+                passage: "Cùng với gió mùa Đông Bắc, trong mùa đông ở nước ta còn có sự hoạt động của Tín phong bán cầu Bắc. Ở miền Bắc, Tín phong hoạt động đan xen giữa các đợt gió mùa Đông Bắc. Ở miền Nam, Tín phong thổi theo hướng đông bắc chiếm ưu thế, đây là nguyên nhân chính làm cho phía tây dãy Trường Sơn Nam và Nam Bộ có mùa khô kéo dài.",
+                statements: [
+                    { text: "a) Hoạt động của gió mùa Đông Bắc và Tín phong là nguyên nhân chính tạo nên sự khác biệt về thời tiết giữa 2 miền Bắc - Nam.", answer: true, exp: "Đúng, tạo mùa đông lạnh miền Bắc và mùa khô ở Nam Bộ/Tây Nguyên." },
+                    { text: "b) Từ tháng XI đến tháng IV năm sau, thời tiết ở miền Bắc nước ta lạnh, ít mưa là do sự hoạt động đồng thời của cả gió mùa Đông Bắc và Tín phong bán cầu Bắc.", answer: false, exp: "Sai. Thời tiết lạnh ít mưa nửa đầu mùa đông miền Bắc chủ yếu do Gió mùa Đông Bắc khô." },
+                    { text: "c) Miền Nam nước ta không có mùa Đông chủ yếu do Tín phong bán cầu Bắc hoạt động mạnh.", answer: false, exp: "Sai. Chủ yếu do vĩ độ thấp gần xích đạo và gió mùa Đông Bắc bị chặn lại ở Bạch Mã." },
+                    { text: "d) Sự thay đổi nhiệt độ theo chiều Bắc - Nam và sự tồn tại của Tín phong bán cầu Bắc ở nước ta là biểu hiện của quy luật địa đới.", answer: true, exp: "Đúng theo quy luật phân hóa địa đới." }
+                ]
+            },
+            {
+                id: "b2_tf_2",
+                lesson: "bai2",
+                type: "tf",
+                title: "Bài 2 - Trắc nghiệm Đúng / Sai (Câu 2)",
+                passage: "Quá trình feralit là quá trình hình thành đất chủ yếu ở nước ta, vì vậy các loại đất feralit là các loại đất đặc trưng cho vùng đồi núi. Loại đất này thường chua và có màu đỏ vàng do bị rửa trôi các chất ba-dơ dễ tan và tích tụ ô-xít sắt, ô-xít nhôm.",
+                statements: [
+                    { text: "a) Feralit là quá trình hình thành đất đặc trưng của vùng nhiệt đới ẩm gió mùa.", answer: true, exp: "Đúng." },
+                    { text: "b) Đất feralit hình thành trên đá vôi phân bố chủ yếu ở các tỉnh thuộc Nam Trung Bộ và Đông Nam Bộ.", answer: false, exp: "Sai. Phân bố chủ yếu ở Tây Bắc, Đông Bắc và Bắc Trung Bộ." },
+                    { text: "c) Nhóm đất feralit có diện tích lớn nhất ở nước ta, phân bố ở cả miền núi và rìa các đồng bằng.", answer: true, exp: "Đúng (~65% diện tích tự nhiên)." },
+                    { text: "d) Đất feralit có màu đỏ vàng do mưa lớn làm rửa trôi các chất ba-dơ dễ tan.", answer: true, exp: "Đúng, tích tụ oxit sắt, nhôm tạo màu đỏ vàng." }
+                ]
+            },
+            {
+                id: "b2_sa_1",
+                lesson: "bai2",
+                type: "sa",
+                title: "Bài 2 - Trả lời ngắn (Câu 1)",
+                question: "Căn cứ bảng số liệu giờ nắng 12 tháng năm 2024 tại Lai Châu (144.8, 230.6, 177.3, 259.6, 150.7, 64.4, 135.9, 115.6, 154.4, 182.5, 184.4, 115.1), hãy tính số giờ nắng trung bình các tháng (làm tròn kết quả đến hàng đơn vị).",
+                correctAnswer: "160",
+                unit: "giờ",
+                explanation: "Tổng 12 tháng = 1915.3 giờ. Trung bình: 1915.3 / 12 = 159.6 ≈ 160 giờ."
+            },
+            {
+                id: "b2_sa_2",
+                lesson: "bai2",
+                type: "sa",
+                title: "Bài 2 - Trả lời ngắn (Câu 2)",
+                question: "Nhiệt độ cao nhất tháng 4 (25,3°C) và thấp nhất tháng 12 (14,6°C) tại Lai Châu năm 2024. Hãy tính biên độ nhiệt độ trung bình năm 2024 tại đây (°C, làm tròn 1 chữ số thập phân).",
+                correctAnswer: "10,7",
+                unit: "°C",
+                explanation: "Biên độ nhiệt: 25,3 - 14,6 = 10,7°C."
+            },
+
+            // --- BÀI 3 ---
+            {
+                id: "b3_mc_1",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 1: Đặc điểm khí hậu tiêu biểu của đai ôn đới gió mùa trên núi ở nước ta là nhiệt độ quanh năm",
+                options: ["dưới 5°C.", "dưới 10°C.", "dưới 15°C.", "trên 20°C."],
+                correct: 2,
+                explanation: "Đai ôn đới gió mùa trên núi (trên 2600m) có nhiệt độ quanh năm dưới 15°C."
+            },
+            {
+                id: "b3_mc_2",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 2: Đặc điểm nổi bật của địa hình miền Bắc và Đông Bắc Bắc Bộ là vùng đồi núi thấp chiếm ưu thế với",
+                options: ["Các cao nguyên đất xám lớn.", "Các cao nguyên đất đỏ rộng.", "Hệ thống các cánh cung núi.", "Các dải núi cao và đồ sộ."],
+                correct: 2,
+                explanation: "Đặc trưng nổi bật của miền Bắc và Đông Bắc Bắc Bộ là hướng núi cánh cung."
+            },
+            {
+                id: "b3_mc_3",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 3: Phát biểu nào sau đây không đúng với khí hậu của phần lãnh thổ phía Nam nước ta?",
+                options: ["Biên độ nhiệt độ trung bình năm lớn.", "Nhiệt độ trung bình năm trên 25°C.", "Phân hóa hai mùa mưa và khô rõ rệt.", "Nền nhiệt độ thiên về khí hậu xích đạo."],
+                correct: 0,
+                explanation: "Phần lãnh thổ phía Nam có biên độ nhiệt độ trung bình năm nhỏ (thường < 3-5°C)."
+            },
+            {
+                id: "b3_mc_4",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 4: Nhận xét nào sau đây không đúng với sự thay đổi nhiệt độ theo Bắc - Nam ở nước ta?",
+                options: ["Biên độ nhiệt độ năm càng vào Nam càng giảm.", "Nhiệt độ trung bình năm tăng dần từ Bắc - Nam.", "Nhiệt độ trung bình năm giảm dần từ Bắc - Nam.", "Nhiệt độ mùa hạ ít có sự khác nhau giữa hai miền."],
+                correct: 2,
+                explanation: "Nhiệt độ trung bình năm TĂNG DẦN từ Bắc vào Nam chứ không giảm."
+            },
+            {
+                id: "b3_mc_5",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 5: Đặc điểm thiên nhiên nổi bật của miền Bắc và Đông Bắc Bắc Bộ nước ta là",
+                options: ["khí hậu cận xích đạo gió mùa với nền nhiệt độ cao quanh năm.", "địa hình có các sơn nguyên bóc mòn và các cao nguyên badan.", "các dãy núi xen kẽ thung lũng sông hướng tây bắc - đông nam.", "gió mùa Đông Bắc hoạt động, có mùa đông lạnh nhất ở nước ta."],
+                correct: 3,
+                explanation: "Miền Bắc và Đông Bắc Bắc Bộ chịu ảnh hưởng mạnh nhất của gió mùa Đông Bắc nên có mùa đông lạnh nhất."
+            },
+            {
+                id: "b3_mc_6",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 1: Giới hạn độ cao của đai nhiệt đới gió mùa ở miền Bắc thấp hơn miền Nam chủ yếu do miền Bắc",
+                options: ["có nền nhiệt độ trung bình năm thấp hơn.", "chịu tác động của dải hội tụ nhiệt đới sớm.", "có địa hình núi cao chiếm diện tích rất lớn.", "nằm ở vị trí gần với khu vực ngoại chí tuyến."],
+                correct: 0,
+                explanation: "Miền Bắc có nhiệt độ trung bình năm thấp hơn nên ranh giới đai nhiệt đới hạ thấp hơn (dưới 600-700m so với 900-1000m ở miền Nam)."
+            },
+            {
+                id: "b3_mc_7",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 2: Sự phân hóa thiên nhiên giữa vùng biển và thềm lục địa nước ta biểu hiện rõ nét nhất thông qua",
+                options: ["diện tích và độ sâu của các vùng biển khác nhau.", "hướng chảy của các dòng hải lưu thay đổi theo mùa.", "sự khác biệt về chế độ triều và độ mặn của nước.", "thành phần loài hải sản và nguồn tài nguyên khoáng."],
+                correct: 0,
+                explanation: "Biểu hiện rõ nhất là đặc điểm hình thái, diện tích và độ sâu nông - sâu của thềm lục địa."
+            },
+            {
+                id: "b3_mc_8",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 3: Mùa khô ở Bắc Bộ không sâu sắc như ở Nam Bộ nước ta chủ yếu do",
+                options: ["mạng lưới sông ngòi dày đặc hơn.", "sự điều tiết của các hồ chứa nước.", "nguồn nước ngầm phong phú hơn.", "ảnh hưởng của gió mùa Đông Bắc."],
+                correct: 3,
+                explanation: "Gió mùa Đông Bắc nửa sau mùa đông mang lại mưa phùn giúp Bắc Bộ bớt khô hạn."
+            },
+            {
+                id: "b3_mc_9",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 4: Sự phân hóa thiên nhiên giữa hai khu vực Đông và Tây của dãy Trường Sơn Nam chủ yếu do",
+                options: ["tác động của gió mùa và hướng các dãy núi.", "độ cao địa hình và ảnh hưởng của biển.", "ảnh hưởng của biển và lớp phủ thực vật.", "độ cao địa hình và hướng các dãy núi."],
+                correct: 0,
+                explanation: "Sự phân hóa Đông - Tây dãy Trường Sơn Nam do sự tác động tương hỗ giữa gió mùa và hướng địa hình núi."
+            },
+            {
+                id: "b3_mc_10",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 5: Cảnh sắc thiên nhiên phần lãnh thổ phía Bắc thay đổi theo mùa do",
+                options: ["sự phân mùa nóng, lạnh.", "thiên nhiên phân hóa theo độ cao.", "sự phân hóa lượng mưa.", "sự phân hóa theo chiều đông - tây."],
+                correct: 0,
+                explanation: "Phía Bắc có 1 mùa đông lạnh và 1 mùa hạ nóng rõ rệt làm cảnh sắc thay đổi theo mùa."
+            },
+            {
+                id: "b3_mc_11",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 1: Miền Tây Bắc và Bắc Trung Bộ là khu vực duy nhất ở nước ta có đầy đủ hệ thống 3 đai cao chủ yếu do",
+                options: ["có địa hình núi cao đồ sộ với các đỉnh núi trên 2600m.", "nằm ở vị trí gần chí tuyến và có nhiều cánh cung núi.", "địa hình đồi núi thấp chiếm ưu thế và có hướng vòng cung.", "chịu tác động của Tín phong và có nhiều cao nguyên badan."],
+                correct: 0,
+                explanation: "Dãy Hoàng Liên Sơn có địa hình cao nhất nước ta (trên 2600m) nên mới xuất hiện đai ôn đới gió mùa trên núi."
+            },
+            {
+                id: "b3_mc_12",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 2: Cơ cấu cây trồng của phần lãnh thổ phía Bắc đa dạng hơn phần lãnh thổ phía Nam chủ yếu do",
+                options: ["có một mùa đông lạnh và sự phân hóa khí hậu theo độ cao.", "diện tích đất phù sa rộng lớn và nguồn nước tưới dào dạt.", "chịu tác động mạnh của gió mùa hạ và dải hội tụ nhiệt đới.", "địa hình chủ yếu là cao nguyên xếp tầng và ít bị chia cắt."],
+                correct: 0,
+                explanation: "Phía Bắc trồng được cả cây nhiệt đới, cận nhiệt và ôn đới nhờ có mùa đông lạnh và đai cao."
+            },
+            {
+                id: "b3_mc_13",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 3: Sinh vật của miền Tây Bắc và Bắc Trung Bộ có đặc điểm là",
+                options: ["không có loài thực vật và động vật cận nhiệt đới.", "thành phần loài sinh vật đa dạng với 3 luồng di cư.", "không có các loài thực vật và động vật nhiệt đới.", "không phát triển được hệ sinh thái rừng lá rộng."],
+                correct: 1,
+                explanation: "Sự kết hợp các luồng di cư từ Ấn Độ - Miến Điện, Mã Lai - Inđô và Hoa Nam làm sinh vật phong phú."
+            },
+            {
+                id: "b3_mc_14",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 4: Biểu hiện nào sau đây không thể hiện rõ sự khác nhau về khí hậu giữa hai miền Nam, Bắc?",
+                options: ["Lượng mưa.", "Số giờ nắng.", "Lượng bức xạ.", "Nhiệt độ trung bình."],
+                correct: 0,
+                explanation: "Cả 2 miền đều có lượng mưa lớn tương đồng, khác biệt rõ nhất nằm ở nền nhiệt, giờ nắng và bức xạ."
+            },
+            {
+                id: "b3_mc_15",
+                lesson: "bai3",
+                type: "mc",
+                title: "Bài 3 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 5: Nguyên nhân nào sau đây là chủ yếu làm cho nhiệt độ trung bình vào mùa đông ở Tây Bắc cao hơn Đông Bắc?",
+                options: ["Thực vật suy giảm.", "Gió phơn Tây Nam.", "Hướng các dãy núi.", "Có vĩ độ thấp hơn."],
+                correct: 2,
+                explanation: "Dãy Hoàng Liên Sơn hướng NW-SE đã ngăn bớt sức mạnh của gió mùa Đông Bắc tràn sang Tây Bắc."
+            },
+            {
+                id: "b3_tf_1",
+                lesson: "bai3",
+                type: "tf",
+                title: "Bài 3 - Trắc nghiệm Đúng / Sai (Câu 1)",
+                passage: "Dải đất ven biên giới phía Bắc của nước ta có khí hậu gần kiểu á nhiệt đới, vùng núi cao khí hậu như vùng ôn đới, vùng đồi núi thấp có khí hậu như châu thổ sông Hồng. Người ta có thể khai thác điều kiện đặc biệt đó để phát triển sản xuất và sinh hoạt.",
+                statements: [
+                    { text: "a) Nội dung trên thể hiện đặc điểm khí hậu của phần lãnh thổ phía Bắc và phần lãnh thổ phía Nam nước ta.", answer: false, exp: "Sai. Chỉ thể hiện phần lãnh thổ phía Bắc." },
+                    { text: "b) Ở miền Bắc, nếu xét cùng độ cao, các vùng lãnh thổ có vĩ độ cao nhiệt độ thấp hơn các vùng lãnh thổ có vĩ độ thấp.", answer: true, exp: "Đúng theo quy luật địa đới." },
+                    { text: "c) Sinh vật của miền Bắc ít đa dạng nhất trong các vùng lãnh thổ cả nước do có gió mùa đông và địa hình cao nhất.", answer: false, exp: "Sai. Sinh vật miền Bắc rất đa dạng." },
+                    { text: "d) Ở nước ta, các qui luật của lớp vỏ địa lí biểu hiện rõ ràng nhất ở phần lãnh thổ từ dãy Bạch Mã trở ra Bắc.", answer: true, exp: "Đúng, có sự thể hiện rõ nét của nhịp điệu mùa." }
+                ]
+            },
+            {
+                id: "b3_tf_2",
+                lesson: "bai3",
+                type: "tf",
+                title: "Bài 3 - Trắc nghiệm Đúng / Sai (Câu 2)",
+                passage: "Địa hình của miền chủ yếu là đồi núi thấp và đồng bằng, có nhiều dãy núi hướng vòng cung. Khí hậu nhiệt đới ẩm gió mùa có mùa đông lạnh và kéo dài nhất nước ta. Cảnh quan thiên nhiên tiêu biểu là rừng nhiệt đới ẩm gió mùa.",
+                statements: [
+                    { text: "a) Nội dung trên thể hiện đặc điểm tự nhiên của miền Bắc và Đông Bắc Bắc Bộ.", answer: true, exp: "Đúng." },
+                    { text: "b) Trong miền, thành phần loài sinh vật nhiệt đới chiếm ưu thế với các kiểu rừng nhiệt đới ẩm gió mùa, rừng trên núi đá vôi.", answer: true, exp: "Đúng." },
+                    { text: "c) Thực vật chính của miền là các cây họ Dầu với khả năng chịu hạn tốt, rụng lá theo mùa.", answer: false, exp: "Sai. Cây họ Dầu tiêu biểu ở miền Nam & Tây Nguyên." },
+                    { text: "d) Mùa đông lạnh và kéo dài nhất nước ta chủ yếu do địa hình phần lớn là đồi núi thấp.", answer: false, exp: "Sai. Do vị trí đón đầu gió mùa Đông Bắc và hướng núi vòng cung mở rộng đón gió." }
+                ]
+            },
+            {
+                id: "b3_sa_1",
+                lesson: "bai3",
+                type: "sa",
+                title: "Bài 3 - Trả lời ngắn (Câu 1)",
+                question: "Ở độ cao 100m sườn đón gió Bi Doup có nhiệt độ 23°C. Đỉnh Bi Doup cao 2287m. Tính nhiệt độ tại độ cao 150m thuộc sườn khuất gió (°C, làm tròn 1 chữ số thập phân).",
+                correctAnswer: "31,2",
+                unit: "°C",
+                explanation: "Sườn đón gió giảm 0,6°C/100m -> Đỉnh núi = 23 - (2187/100 * 0,6) = 9.878°C. Sườn khuất gió tăng 1°C/100m -> Tại 150m = 9.878 + (2137/100 * 1) ≈ 31.2°C."
+            },
+            {
+                id: "b3_sa_2",
+                lesson: "bai3",
+                type: "sa",
+                title: "Bài 3 - Trả lời ngắn (Câu 2)",
+                question: "Độ ẩm trung bình năm 2024 tại trạm Vinh là 81,9% và tại Cà Mau là 78,25%. Hãy cho biết độ ẩm trung bình trạm Vinh cao hơn Cà Mau bao nhiêu % (làm tròn 1 chữ số thập phân)?",
+                correctAnswer: "3,7",
+                unit: "%",
+                explanation: "81.916 - 78.25 = 3.666% ≈ 3,7%."
+            },
+
+            // --- BÀI 5 ---
+            {
+                id: "b5_mc_1",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 1: Đối với vùng đồng bằng ven biển, biện pháp nào sau đây giúp hạn chế tình trạng khô hạn và mặn hóa?",
+                options: ["Làm ruộng bậc thang cao.", "Đào các hố vây cá dốc.", "Xây dựng hệ thống thủy lợi.", "Bón nhiều phân hóa học."],
+                correct: 2,
+                explanation: "Thủy lợi giúp giữ ngọt, thau chua rửa mặn và ngăn xâm nhập mặn."
+            },
+            {
+                id: "b5_mc_2",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 2: Hoạt động nào sau đây ở nông thôn nước ta là nguồn gốc chủ yếu gây ra tình trạng ô nhiễm bụi?",
+                options: ["Sử dụng thuốc trừ sâu.", "Đốt các phụ phẩm nông nghiệp.", "Các hoạt động du lịch núi.", "Chế biến các mặt hàng gỗ."],
+                correct: 1,
+                explanation: "Đốt rơm rạ phụ phẩm nông nghiệp gây nên bụi mịn và ô nhiễm không khí lớn."
+            },
+            {
+                id: "b5_mc_3",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 3: Để giảm nhẹ tác động của biến đổi khí hậu tại vùng ven biển, nước ta cần ưu tiên giải pháp nào?",
+                options: ["Trồng rừng ngập mặn ven biển.", "Đào nhiều hồ đầm trên cát.", "Làm ruộng bậc thang ven.", "Bón phân hữu cơ cho đất."],
+                correct: 0,
+                explanation: "Rừng ngập mặn chắn sóng, bảo vệ đê biển và duy trì sinh thái."
+            },
+            {
+                id: "b5_mc_4",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 4: Tính đa dạng sinh học cao thể hiện ở",
+                options: ["sự phân bố sinh vật.", "sự phát triển của sinh vật.", "diện tích rừng lớn.", "nguồn gen quý hiếm."],
+                correct: 3,
+                explanation: "Đa dạng sinh học biểu hiện qua sự phong phú về hệ sinh thái, loài và nguồn gen quý."
+            },
+            {
+                id: "b5_mc_5",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Nhận biết)",
+                question: "Câu 5: Số lượng loài sinh vật đang giảm nhiều nhất ở nước ta là",
+                options: ["Bò sát.", "Thú.", "Chim.", "Cá."],
+                correct: 2,
+                explanation: "Các loài chim (hoặc sinh vật nhóm có lông vũ/đặc hữu theo bộ đề chỉnh sửa) chịu ảnh hưởng suy giảm nhiều."
+            },
+            {
+                id: "b5_mc_6",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 1: Việc quản lí tài nguyên nước của nước ta phải bảo đảm tính thống nhất theo lưu vực sông chủ yếu nhằm",
+                options: ["bảo đảm sự công bằng trong khai thác, sử dụng.", "tăng nhanh sản lượng đánh bắt thủy sản nội địa.", "hạn chế hoàn toàn hiện tượng sạt lở ven bờ sông.", "thay đổi hướng chảy của các hệ thống sông chính."],
+                correct: 0,
+                explanation: "Quản lý theo lưu vực sông giúp điều tiết hài hòa, bảo vệ môi trường nước và công bằng khai thác."
+            },
+            {
+                id: "b5_mc_7",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 2: Tình trạng suy giảm số lượng cá thể các loài thực vật và động vật hoang dã ở nước ta dẫn đến hệ quả là",
+                options: ["làm mất đi các nguồn gen sinh vật quý hiếm.", "làm thay đổi hướng di cư của các loài sinh vật.", "tăng nhanh diện tích các hệ sinh thái thứ sinh.", "xuất hiện thêm nhiều loài ngoại lai xâm hại mới."],
+                correct: 0,
+                explanation: "Suy giảm cá thể dẫn đến nguy cơ tuyệt chủng và mất nguồn gen di truyền."
+            },
+            {
+                id: "b5_mc_8",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 3: Việc lồng ghép và thúc đẩy các mô hình kinh tế xanh ở nước ta hiện nay có ý nghĩa chủ yếu nào sau đây?",
+                options: ["Đảm bảo phát triển bền vững, bảo vệ môi trường.", "Thay thế hoàn toàn các ngành công nghiệp cũ kỹ.", "Khai thác tối đa các loại tài nguyên khoáng sản.", "Giải quyết việc làm cho lao động vùng nông thôn."],
+                correct: 0,
+                explanation: "Kinh tế xanh nhằm mục tiêu hài hòa phát triển kinh tế đi đôi với bảo vệ môi trường và bền vững."
+            },
+            {
+                id: "b5_mc_9",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 4: Hậu quả của ô nhiễm môi trường nước, nhất là ở vùng cửa sông, ven biển là",
+                options: ["biến đổi khí hậu.", "mưa a-xít.", "cạn kiệt dòng chảy.", "hải sản giảm sút."],
+                correct: 3,
+                explanation: "Ô nhiễm môi trường nước phá hủy môi trường sống, làm sụt giảm nghiêm trọng nguồn lợi hải sản."
+            },
+            {
+                id: "b5_mc_10",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Thông hiểu)",
+                question: "Câu 5: Phát biểu nào sau đây không đúng với hiện trạng sử dụng tài nguyên đất của nước ta ?",
+                options: ["Bình quân trên đầu người nhỏ.", "Diện tích đất có rừng còn thấp.", "Diện tích đất chuyên dùng ngày càng ít.", "Diện tích đất đai bị suy thoái còn rất lớn."],
+                correct: 2,
+                explanation: "Diện tích đất chuyên dùng đang NGAY CÀNG TĂNG do quá trình đô thị hóa, công nghiệp hóa."
+            },
+            {
+                id: "b5_mc_11",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 1: Trồng rừng ngập mặn ở các vùng ven biển nước ta hiện nay có ý nghĩa chiến lược chủ yếu để",
+                options: ["giảm nhẹ tác động của biến đổi khí hậu.", "mở rộng tối đa diện tích đất thổ cư ven.", "khai thác triệt để nguồn lợi hải sản ven.", "thay thế hoàn toàn hệ thống đê biển lớn."],
+                correct: 0,
+                explanation: "Rừng ngập mặn giúp chống bão, hạn chế xói lở bờ biển và giảm nhẹ tác động của biến đổi khí hậu."
+            },
+            {
+                id: "b5_mc_12",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 2: Việc áp dụng kĩ thuật làm ruộng bậc thang ở vùng đồi núi nước ta hiện nay chủ yếu nhằm",
+                options: ["hạn chế xói mòn và phát triển sản xuất.", "thay thế hoàn toàn cây trồng lâu năm.", "tận dụng tối đa nguồn nước từ các sông.", "mở rộng quy mô các khu công nghiệp núi."],
+                correct: 0,
+                explanation: "Ruộng bậc thang giữ nước, ngăn chảy tràn xói mòn đất dốc và tạo mặt bằng canh tác."
+            },
+            {
+                id: "b5_mc_13",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 3: Nguyên nhân chủ yếu làm cho đất đai nước ta dễ bị suy thoái là do",
+                options: ["Địa hình đồi núi thấp, mưa lớn và tập trung theo mùa.", "Chế độ mưa phân hóa theo mùa, độ dốc của địa hình.", "Nhiệt ẩm cao, mưa theo mùa, địa hình nhiều đồi núi.", "Địa hình nhiều đồi núi, đất đá vụn bở và dễ bóc mòn."],
+                correct: 2,
+                explanation: "Địa hình đồi núi dốc cộng với khí hậu nhiệt đới ẩm mưa lớn theo mùa thúc đẩy rửa trôi, xói mòn."
+            },
+            {
+                id: "b5_mc_14",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 4: Khó khăn lớn nhất trong việc sử dụng đất ở miền Nam Trung Bộ và Nam Bộ nước ta là",
+                options: ["Địa hình thấp, ảnh hưởng mạnh của triều cường.", "Sự thất thường của nhịp điệu dòng chảy sông ngòi.", "Tình trạng thiếu nước nghiêm trọng vào mùa khô.", "Tính không ổn định của thời tiết, khí hậu."],
+                correct: 2,
+                explanation: "Mùa khô kéo dài dằn dặc gây hạn hán và xâm nhập mặn nghiêm trọng."
+            },
+            {
+                id: "b5_mc_15",
+                lesson: "bai5",
+                type: "mc",
+                title: "Bài 5 - Trắc nghiệm (Vận dụng)",
+                question: "Câu 5: Diện tích rừng ngập mặn nước ta bị thu hẹp chủ yếu là do",
+                options: ["chuyển đổi mục đích.", "thiên tai gia tăng.", "ô nhiễm môi trường.", "mực nước biển dâng."],
+                correct: 0,
+                explanation: "Phần lớn diện tích bị thu hẹp do chuyển sang nuôi tôm, thủy sản và phát triển hạ tầng."
+            },
+            {
+                id: "b5_tf_1",
+                lesson: "bai5",
+                type: "tf",
+                title: "Bài 5 - Trắc nghiệm Đúng / Sai (Câu 1)",
+                passage: "Diện tích và tỉ lệ che phủ rừng của nước ta giai đoạn 2010 - 2024 (2010: 13388,1 nghìn ha / 39,5%; 2024: 14874,3 nghìn ha / 42,0%).",
+                statements: [
+                    { text: "a) Năm 2024 so với năm 2010, diện tích rừng và tỉ lệ che phủ rừng tăng.", answer: true, exp: "Đúng." },
+                    { text: "b) Tỉ lệ che phủ rừng có xu hướng tăng chủ yếu do sự phục hồi của rừng tự nhiên.", answer: false, exp: "Sai. Tăng chủ yếu do diện tích rừng trồng mới." },
+                    { text: "c) Diện tích rừng tăng lên chủ yếu do chủ trương đẩy mạnh trồng rừng của Nhà nước.", answer: true, exp: "Đúng." },
+                    { text: "d) Biểu đồ miền là dạng biểu đồ thích hợp nhất để thể hiện diện tích và tỉ lệ che phủ rừng nước ta, giai đoạn 2010-2024.", answer: false, exp: "Sai. Biểu đồ kết hợp cột - đường mới là phù hợp nhất." }
+                ]
+            },
+            {
+                id: "b5_tf_2",
+                lesson: "bai5",
+                type: "tf",
+                title: "Bài 5 - Trắc nghiệm Đúng / Sai (Câu 2)",
+                passage: "Diện tích rừng trồng mới của Việt Nam giai đoạn 2017-2024 (Năm 2024: Tổng 304,0; Rừng sản xuất 296,2; Phòng hộ 6,5; Đặc dụng 1,4 nghìn ha).",
+                statements: [
+                    { text: "a) Tổng diện tích rừng trồng mới của nước ta tăng liên tục, tăng nhiều nhất là rừng sản xuất.", answer: false, exp: "Sai. Tổng diện tích biến động (2018-2019 giảm), không tăng liên tục." },
+                    { text: "b) Diện tích rừng sản xuất luôn cao nhất nhưng giảm nhiều nhất trong các loại rừng trồng mới.", answer: false, exp: "Sai. Rừng sản xuất có xu hướng tăng (từ 267.0 lên 296.2 nghìn ha)." },
+                    { text: "c) Diện tích rừng trồng của nước ta khá cao do chính sách của Nhà nước trong phát triển rừng.", answer: true, exp: "Đúng." },
+                    { text: "d) Rừng sản xuất chiếm diện tích lớn nhất do đáp ứng nhu cầu của thị trường trong và ngoài nước.", answer: true, exp: "Đúng." }
+                ]
+            },
+            {
+                id: "b5_sa_1",
+                lesson: "bai5",
+                type: "sa",
+                title: "Bài 5 - Trả lời ngắn (Câu 1)",
+                question: "Tổng diện tích rừng năm 2024 là 14874,3 nghìn ha, rừng tự nhiên 10133,9 nghìn ha. Tính tỉ lệ % diện tích rừng trồng trong tổng diện tích rừng (làm tròn 1 chữ số thập phân).",
+                correctAnswer: "31,9",
+                unit: "%",
+                explanation: "Rừng trồng = 14874,3 - 10133,9 = 4740,4 nghìn ha. Tỉ lệ = (4740,4 / 14874,3) * 100 ≈ 31,9%."
+            },
+            {
+                id: "b5_sa_2",
+                lesson: "bai5",
+                type: "sa",
+                title: "Bài 5 - Trả lời ngắn (Câu 2)",
+                question: "Tổng diện tích rừng năm 2024 là 14,9 triệu ha, rừng tự nhiên là 10,1 triệu ha. Tính tỉ lệ % rừng tự nhiên trong tổng diện tích rừng (làm tròn 1 chữ số thập phân).",
+                correctAnswer: "67,8",
+                unit: "%",
+                explanation: "Tỉ lệ = (10,1 / 14,9) * 100 ≈ 67,8%."
+            }
+        ];
+
+        let currentLesson = 'all';
+        let userAnswers = {};
+
+        function renderQuiz() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            const filteredData = currentLesson === 'all' 
+                ? quizData 
+                : quizData.filter(q => q.lesson === currentLesson);
+
+            if (filteredData.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-slate-500 font-medium">Không có câu hỏi nào trong phần này.</div>`;
+                return;
+            }
+
+            filteredData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-2xl custom-shadow border border-slate-100 p-6 sm:p-8 transition';
+                card.id = `q_card_${item.id}`;
+
+                let content = `
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">${item.title}</span>
+                        <span class="text-xs font-semibold text-slate-400">Câu ${index + 1}</span>
+                    </div>
+                `;
+
+                if (item.type === 'mc') {
+                    const isAnswered = userAnswers[item.id] !== undefined;
+                    const selectedOpt = userAnswers[item.id];
+                    
+                    content += `
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-4">${item.question}</h3>
+                        <div class="space-y-2.5" id="options_${item.id}">
+                    `;
+                    item.options.forEach((opt, optIdx) => {
+                        const isSelected = selectedOpt === optIdx;
+                        let optionStyle = "bg-white border-slate-200 hover:bg-blue-50/50 hover:border-blue-300";
+                        let radioChecked = isSelected ? 'checked' : '';
+                        
+                        if (isAnswered) {
+                            if (optIdx === item.correct) {
+                                optionStyle = "bg-emerald-50 border-emerald-500 text-emerald-900 font-semibold ring-1 ring-emerald-500";
+                            } else if (isSelected && isSelected !== item.correct) {
+                                optionStyle = "bg-rose-50 border-rose-400 text-rose-900 font-semibold ring-1 ring-rose-400";
+                            }
+                        }
+
+                        content += `
+                            <label class="flex items-start p-3.5 rounded-xl border ${optionStyle} cursor-pointer transition">
+                                <input type="radio" name="${item.id}" value="${optIdx}" ${radioChecked} onchange="handleAnswer('${item.id}', ${optIdx})" class="mt-1 text-blue-600 focus:ring-blue-500 h-4 w-4">
+                                <span class="ml-3 text-sm sm:text-base font-medium">${String.fromCharCode(65 + optIdx)}. ${opt}</span>
+                            </label>
+                        `;
+                    });
+                    content += `</div>`;
+
+                    // Instant Explanation
+                    if (isAnswered) {
+                        const isCorrect = selectedOpt === item.correct;
+                        content += `
+                            <div class="mt-4 p-4 rounded-xl text-sm font-medium ${isCorrect ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-rose-50 border border-rose-200 text-rose-800'}">
+                                ${isCorrect ? '✅ <strong>Chính xác!</strong>' : `❌ <strong>Chưa chính xác!</strong> Đáp án đúng là <strong>${String.fromCharCode(65 + item.correct)}</strong>.`} ${item.explanation}
+                            </div>
+                        `;
+                    }
+
+                } else if (item.type === 'tf') {
+                    content += `
+                        <div class="bg-slate-50 p-4 rounded-xl text-slate-700 text-sm italic mb-4 border border-slate-200">
+                            <strong>Thông tin:</strong> ${item.passage}
+                        </div>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-4">Xác định các nhận định sau là Đúng hay Sai:</h3>
+                        <div class="space-y-4">
+                    `;
+                    item.statements.forEach((st, stIdx) => {
+                        const userVal = userAnswers[`${item.id}_${stIdx}`];
+                        const isStAnswered = userVal !== undefined;
+                        const isStCorrect = userVal === st.answer;
+
+                        content += `
+                            <div class="p-4 rounded-xl border border-slate-200 ${isStAnswered ? (isStCorrect ? 'bg-emerald-50/40 border-emerald-300' : 'bg-rose-50/40 border-rose-300') : 'bg-slate-50/50'}">
+                                <p class="text-sm sm:text-base font-medium text-slate-800 mb-3">${st.text}</p>
+                                <div class="flex space-x-4">
+                                    <label class="inline-flex items-center cursor-pointer px-4 py-2 rounded-lg border ${userVal === true ? 'bg-emerald-600 text-white font-bold border-emerald-600' : 'bg-white border-slate-300 text-slate-700'} transition">
+                                        <input type="radio" name="${item.id}_${stIdx}" value="true" ${userVal === true ? 'checked' : ''} onchange="handleTFAnswer('${item.id}', ${stIdx}, true)" class="hidden">
+                                        <span class="text-sm">Đúng</span>
+                                    </label>
+                                    <label class="inline-flex items-center cursor-pointer px-4 py-2 rounded-lg border ${userVal === false ? 'bg-rose-600 text-white font-bold border-rose-600' : 'bg-white border-slate-300 text-slate-700'} transition">
+                                        <input type="radio" name="${item.id}_${stIdx}" value="false" ${userVal === false ? 'checked' : ''} onchange="handleTFAnswer('${item.id}', ${stIdx}, false)" class="hidden">
+                                        <span class="text-sm">Sai</span>
+                                    </label>
+                                </div>
+                                ${isStAnswered ? `
+                                    <div class="mt-2.5 text-xs font-bold ${isStCorrect ? 'text-emerald-700' : 'text-rose-700'}">
+                                        ${isStCorrect ? '✅ Đúng rồi!' : `❌ Sai rồi! Đáp án đúng là: <strong>${st.answer ? 'Đúng' : 'Sai'}</strong>.`} ${st.exp}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    });
+                    content += `</div>`;
+                } else if (item.type === 'sa') {
+                    const userVal = userAnswers[item.id] || '';
+                    const isAnswered = userVal !== '';
+                    const cleanUser = String(userVal).trim().replace(',', '.');
+                    const cleanCorrect = String(item.correctAnswer).trim().replace(',', '.');
+                    const isCorrect = isAnswered && (cleanUser === cleanCorrect || (Math.abs(parseFloat(cleanUser) - parseFloat(cleanCorrect)) < 0.1 && !isNaN(cleanUser)));
+
+                    content += `
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 mb-3">${item.question}</h3>
+                        <div class="flex items-center space-x-3 mb-2">
+                            <input type="text" id="sa_${item.id}" value="${userVal}" placeholder="Nhập kết quả..." onblur="handleSAAnswer('${item.id}', this.value)" onkeydown="if(event.key === 'Enter') handleSAAnswer('${item.id}', this.value)" class="flex-1 max-w-xs px-4 py-2.5 rounded-xl border ${isAnswered ? (isCorrect ? 'border-emerald-500 bg-emerald-50/30' : 'border-rose-500 bg-rose-50/30') : 'border-slate-300'} focus:ring-2 focus:ring-blue-500 outline-none text-slate-800 font-semibold">
+                            <span class="text-sm font-bold text-slate-600">${item.unit || ''}</span>
+                            <button onclick="handleSAAnswer('${item.id}', document.getElementById('sa_${item.id}').value)" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-xl text-sm transition">Xác nhận</button>
+                        </div>
+                    `;
+
+                    if (isAnswered) {
+                        content += `
+                            <div class="mt-3 p-4 rounded-xl text-sm font-medium ${isCorrect ? 'bg-emerald-50 border border-emerald-200 text-emerald-800' : 'bg-rose-50 border border-rose-200 text-rose-800'}">
+                                ${isCorrect ? '✅ <strong>Chính xác!</strong>' : `❌ <strong>Chưa chính xác!</strong> Đáp án chuẩn là <strong>${item.correctAnswer} ${item.unit || ''}</strong>.`} ${item.explanation}
+                            </div>
+                        `;
+                    }
+                }
+
+                card.innerHTML = content;
+                container.appendChild(card);
+            });
+
+            updateProgress();
+        }
+
+        function filterLesson(lesson) {
+            currentLesson = lesson;
+            document.querySelectorAll('.lesson-tab').forEach(btn => {
+                if (btn.getAttribute('data-lesson') === lesson) {
+                    btn.className = 'lesson-tab px-4 py-2 rounded-xl font-semibold text-sm transition bg-blue-600 text-white shadow-md';
+                } else {
+                    btn.className = 'lesson-tab px-4 py-2 rounded-xl font-semibold text-sm transition bg-white text-slate-600 hover:bg-slate-100 border border-slate-200';
+                }
+            });
+            renderQuiz();
+        }
+
+        // Handle Instant Interactions
+        function handleAnswer(questionId, optionIndex) {
+            userAnswers[questionId] = optionIndex;
+            renderQuiz();
+        }
+
+        function handleTFAnswer(questionId, statementIndex, value) {
+            userAnswers[`${questionId}_${statementIndex}`] = value;
+            renderQuiz();
+        }
+
+        function handleSAAnswer(questionId, value) {
+            if (value.trim() !== '') {
+                userAnswers[questionId] = value.trim();
+                renderQuiz();
+            }
+        }
+
+        function calculateScore() {
+            let score = 0;
+            let totalPossible = 0;
+            let answeredCount = 0;
+
+            quizData.forEach(q => {
+                if (q.type === 'mc') {
+                    totalPossible += 1;
+                    if (userAnswers[q.id] !== undefined) {
+                        answeredCount++;
+                        if (userAnswers[q.id] === q.correct) score += 1;
+                    }
+                } else if (q.type === 'tf') {
+                    q.statements.forEach((st, idx) => {
+                        totalPossible += 1;
+                        if (userAnswers[`${q.id}_${idx}`] !== undefined) {
+                            answeredCount++;
+                            if (userAnswers[`${q.id}_${idx}`] === st.answer) score += 1;
+                        }
+                    });
+                } else if (q.type === 'sa') {
+                    totalPossible += 1;
+                    if (userAnswers[q.id] !== undefined && userAnswers[q.id] !== '') {
+                        answeredCount++;
+                        const cleanUser = String(userAnswers[q.id]).trim().replace(',', '.');
+                        const cleanCorrect = String(q.correctAnswer).trim().replace(',', '.');
+                        if (cleanUser === cleanCorrect || (Math.abs(parseFloat(cleanUser) - parseFloat(cleanCorrect)) < 0.1 && !isNaN(cleanUser))) {
+                            score += 1;
+                        }
+                    }
+                }
+            });
+
+            return { score, totalPossible, answeredCount };
+        }
+
+        function updateProgress() {
+            const { score, totalPossible, answeredCount } = calculateScore();
+
+            const percent = totalPossible > 0 ? Math.round((answeredCount / totalPossible) * 100) : 0;
+            document.getElementById('progressBar').style.width = `${percent}%`;
+            document.getElementById('progressText').innerText = `${answeredCount} / ${totalPossible} ý (${percent}%)`;
+            document.getElementById('headerTotal').innerText = totalPossible;
+            document.getElementById('headerScore').innerText = score;
+            document.getElementById('correctCount').innerText = score;
+        }
+
+        function submitAll() {
+            const { score, totalPossible } = calculateScore();
+            const percent = totalPossible > 0 ? (score / totalPossible) * 100 : 0;
+            const roundedPercent = Math.round(percent);
+
+            document.getElementById('modalScoreDisplay').innerText = `${score} / ${totalPossible}`;
+            document.getElementById('modalPercentage').innerText = `Tỉ lệ chính xác: ${roundedPercent}%`;
+
+            const subtextEl = document.getElementById('modalSubtext');
+            const iconEl = document.getElementById('modalIcon');
+
+            // Custom Grading Feedback Rules
+            if (percent < 50) {
+                iconEl.innerText = '🐥';
+                subtextEl.innerText = 'gà vãi =))';
+                subtextEl.className = 'text-xl font-extrabold text-rose-600 mt-3 pt-3 border-t border-slate-200';
+            } else if (percent < 70) {
+                iconEl.innerText = '👍';
+                subtextEl.innerText = 'cũng tạm';
+                subtextEl.className = 'text-xl font-extrabold text-amber-600 mt-3 pt-3 border-t border-slate-200';
+            } else if (percent < 95) {
+                iconEl.innerText = '🔥';
+                subtextEl.innerText = 'ổn đấy';
+                subtextEl.className = 'text-xl font-extrabold text-blue-600 mt-3 pt-3 border-t border-slate-200';
+                confetti({ particleCount: 70, spread: 60, origin: { y: 0.6 } });
+            } else {
+                iconEl.innerText = '🐢';
+                subtextEl.innerText = 'rùa à 🐢';
+                subtextEl.className = 'text-xl font-extrabold text-emerald-600 mt-3 pt-3 border-t border-slate-200';
+                confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+            }
+
+            document.getElementById('resultModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.add('hidden');
+        }
+
+        function resetQuiz() {
+            userAnswers = {};
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = function() {
+            renderQuiz();
+        };
+    </script>
+</body>
+</html>
